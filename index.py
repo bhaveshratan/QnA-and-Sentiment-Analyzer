@@ -98,7 +98,7 @@ button = dbc.Container(
 )
 
 
-app = Dash(meta_tags=[{'name':'viewport', 'content':'width=device-width'}],prevent_initial_callbacks=True)
+app = Dash(__name__,meta_tags=[{'name':'viewport', 'content':'width=device-width'}],prevent_initial_callbacks=True)
 server = app.server
 
 navbar = dbc.NavbarSimple(children = [
