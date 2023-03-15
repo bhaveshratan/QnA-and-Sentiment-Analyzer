@@ -8,3 +8,4 @@ requests
 textblob
 plotly
 gunicorn
+tensorflow
