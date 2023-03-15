@@ -198,7 +198,7 @@ disclaimer = html.Div([
 
 
 app.layout = html.Div([navbar,para_quote,question_go,answer_emoji,nouns,overall,textblob_analysis,html.Br(),html.Br(),disclaimer,html.Br(),html.Br()],className='main_container')
-
+server = app.server
 
 @app.callback(
     Output('answer_id','children'),
@@ -263,7 +263,7 @@ def update_others(clicked,text_input):
         return noun_text,str(len(noun_set))+' Unique Noun Phrases',senten,pol,sub
 
     else:
-            return '','','','','','',''
+            return '','','','','',
 
 @app.callback(
     Output('datable_interactive','data'),
