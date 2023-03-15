@@ -4,7 +4,6 @@ pandas
 numpy
 transformers
 dash-bootstrap-components
-tensorflow
 requests
 textblob
 plotly
