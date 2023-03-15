@@ -198,7 +198,7 @@ disclaimer = html.Div([
 
 
 app.layout = html.Div([navbar,para_quote,question_go,answer_emoji,nouns,overall,textblob_analysis,html.Br(),html.Br(),disclaimer,html.Br(),html.Br()],className='main_container')
-server = app.server
+
 
 @app.callback(
     Output('answer_id','children'),
