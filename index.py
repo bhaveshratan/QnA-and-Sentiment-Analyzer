@@ -11,9 +11,10 @@ from nltk import tokenize
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
-import subprocess
-cmd = ['python3','-m','textblob.download_corpora']
-subprocess.run(cmd)
+import corpora
+#import subprocess
+#cmd = ['python3','-m','textblob.download_corpora']
+#subprocess.run(cmd)
 #print("Working")
 
 
