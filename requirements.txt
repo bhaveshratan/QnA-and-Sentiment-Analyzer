@@ -8,5 +8,5 @@ requests
 textblob
 plotly
 gunicorn
-tensorflow-cpu
+tensorflow
 
