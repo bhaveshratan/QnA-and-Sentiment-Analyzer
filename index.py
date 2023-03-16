@@ -105,7 +105,8 @@ button = dbc.Container(
 )
 
 
-app_dash = Dash(meta_tags=[{'name':'viewport', 'content':'width=device-width'}],prevent_initial_callbacks=True)
+app_dash = Dash(__name__,meta_tags=[{'name':'viewport', 'content':'width=device-width'}],prevent_initial_callbacks=True)
+server = app.server
 
 navbar = dbc.NavbarSimple(children = [
     html.Img(src = 'https://cdn-icons-png.flaticon.com/512/945/945458.png?w=740&t=st=1678701855~exp=1678702455~hmac=6f067e5f6a47a0cd6810a7ffb2598c9a41046bb8bbdfc1aaa538ec3eeed80748',height = '50px',)
