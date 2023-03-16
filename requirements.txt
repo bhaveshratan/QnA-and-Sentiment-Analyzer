@@ -9,3 +9,4 @@ textblob
 plotly
 gunicorn
 tensorflow
+python -m textblob.download_corpora
