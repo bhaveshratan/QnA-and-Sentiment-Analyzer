@@ -15,7 +15,7 @@ import subprocess
 cmd = ['python3','-m','textblob.download_corpora']
 subprocess.run(cmd)
 #print("Working")
-import corpora
+
 
 
 app = Dash(__name__,meta_tags=[{'name':'viewport', 'content':'width=device-width'}],prevent_initial_callbacks=True)
