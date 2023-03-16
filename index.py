@@ -230,7 +230,7 @@ def update_answer(clicked,text_input,question_input):
 
             return ans_final,score
 
-    else: return '',''
+    
 
 @app.callback(
 
@@ -280,8 +280,7 @@ def update_others(clicked,text_input):
 
             return noun_text,str(len(noun_set))+' Unique Noun Phrases',senten,pol,sub
 
-    else:
-            return '','','','','',
+   
 
 @app.callback(
     Output('datable_interactive','data'),
