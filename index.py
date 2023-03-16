@@ -17,11 +17,6 @@ import corpora
 #subprocess.run(cmd)
 #print("Working")
 
-
-
-app = Dash(__name__,meta_tags=[{'name':'viewport', 'content':'width=device-width'}],prevent_initial_callbacks=True)
-server = app.server
-
 # Get Quote
 
 api_response = requests.get('https://favqs.com/api/qotd')
@@ -87,6 +82,7 @@ sentiment_table = dash_table.DataTable(
     id = 'datable_interactive'
 )
 
+# take input in text area
 
 textArea = dcc.Textarea(id = 'dcc_textarea',
                         placeholder='',
@@ -95,12 +91,12 @@ textArea = dcc.Textarea(id = 'dcc_textarea',
                         style = {'fontFamily':'Times New Roman','border-style':'solid','width':'100%','min-height':'88%','height':'auto','backgroundColor':'#FFFFFF','color':'black'})
 
 
-textArea_question = dcc.Textarea(id = 'question',
-                                 placeholder='',
-                                 draggable=True,
-                                 spellCheck=True,
-                                 style = {'fontFamily':'Times New Roman','border-style':'solid','width':'100%','min-height':'20%','height':'auto'},
-                                 className='question')
+#textArea_question = dcc.Textarea(id = 'question',
+#                                  placeholder='Question',
+#                                  draggable=True,
+#                                  spellCheck=True,
+#                                  style = {'fontFamily':'Times New Roman','border-style':'solid','width':'100%','min-height':'20%','height':'auto'},
+#                                  className='question')
 
 button = dbc.Container(
     [
@@ -109,12 +105,12 @@ button = dbc.Container(
 )
 
 
-
+app_dash = Dash(meta_tags=[{'name':'viewport', 'content':'width=device-width'}],prevent_initial_callbacks=True)
 
 navbar = dbc.NavbarSimple(children = [
     html.Img(src = 'https://cdn-icons-png.flaticon.com/512/945/945458.png?w=740&t=st=1678701855~exp=1678702455~hmac=6f067e5f6a47a0cd6810a7ffb2598c9a41046bb8bbdfc1aaa538ec3eeed80748',height = '50px',)
 ],
-    brand='NLP Based QnA & Sentiment Analyzer',
+    brand='Sentiment Analyzer App',
     brand_style=  {'fontFamily':'Papyrus','fontSize':'40px',},
     style = {'margin-left':'5%','margin-right':'5%','margin-top':'5px',},
     dark=False,
@@ -128,27 +124,27 @@ para_quote = dbc.Row([
         children=['A quote to Remember',html.Br(),card_quote], className='quote_container',fluid=True)),
 ], className='para_and_quote')
 
-question_go = dbc.Row([
-    dbc.Col(children = ['Ask your question below',html.Br(),textArea_question,html.Br()],className='ask_and_question',width={'size':10,'offset':0}),
-
-    dbc.Col(children = [button],className='col_container')
-
-],className='question_go_box')
-
-answer_emoji = dbc.Row([
-    dbc.Col(children = ['Your answer will appear below',
-                        html.Br(),
-                        html.Br(),
-                        html.H5(id = 'answer_id',
-                                children= [],
-                                className='answer_value')],className='answer_class',width={'size':10,'offset':0}),
-    dbc.Col(children=['Confidence Level',
-                      html.Br(),
-                      html.Br(),
-                      html.H5(id='score_id',
-                              children=[],
-                              className='answer_value')],className='score_container'),
-],className='answer_and_emoji')
+#question_go = dbc.Row([
+#    dbc.Col(children = ['Ask your question below',html.Br(),html.Br()],className='ask_and_question',width={'size':10,'offset':0}),
+#
+#    dbc.Col(children = [button],className='col_container')
+#
+#],className='question_go_box')
+#
+# answer_emoji = dbc.Row([
+#     dbc.Col(children = ['Your answer will appear below',
+#                         html.Br(),
+#                         html.Br(),
+#                         html.H5(id = 'answer_id',
+#                                 children= [],
+#                                 className='answer_value')],className='answer_class',width={'size':10,'offset':0}),
+#     dbc.Col(children=['Confidence Level',
+#                       html.Br(),
+#                       html.Br(),
+#                       html.H5(id='score_id',
+#                               children=[],
+#                               className='answer_value')],className='score_container'),
+# ],className='answer_and_emoji')
 
 nouns = dbc.Row([
     dbc.Col(children = ['Detected noun phrases will appear below',
@@ -158,12 +154,15 @@ nouns = dbc.Row([
                                 children = [],
                                 className='noun_value')],className='answer_class',width={'size':10,'offset':0}),
 
-    dbc.Col(children=['No. of Detected Noun Phrases',
+    dbc.Col(children=['Click GO! to start analyzing',
                       html.Br(),
                       html.Br(),
-                      html.H5(id='number_noun',
-                              children=[],
-                              className='answer_value')],className='score_container'),
+                      button,
+                      html.Br(),
+                      #html.H5(id='number_noun',
+                      #        children=[],
+                      #        className='answer_value')],className='score_container'),
+            ],className='score_container')
 
 ],className='answer_and_emoji')
 
@@ -207,35 +206,31 @@ disclaimer = html.Div([
 ], className='disclaimer')
 
 
-app.layout = html.Div([navbar,para_quote,question_go,answer_emoji,nouns,overall,textblob_analysis,html.Br(),html.Br(),disclaimer,html.Br(),html.Br()],className='main_container')
+app_dash.layout = html.Div([navbar,para_quote,nouns,overall,textblob_analysis,html.Br(),html.Br(),disclaimer,html.Br(),html.Br()],className='main_container')
 
 
-@app.callback(
-    Output('answer_id','children'),
-    Output('score_id', 'children'),
-    Input('button_id', 'n_clicks'),
-    State('dcc_textarea', 'value'),
-    State('question', 'value'),
-)
-def update_answer(clicked,text_input,question_input):
-    if clicked > 0 :
-        if  (text_input is None) or (question_input is None):
+# @app_dash.callback(
+#     Output('answer_id','children'),
+#     Output('score_id', 'children'),
+#     Input('button_id', 'n_clicks'),
+#     State('dcc_textarea', 'value'),
+#     State('question', 'value'),
+# )
+# def update_answer(clicked,text_input,question_input):
+#     if clicked > 0 and text_input != '':
+#         type_nlp = pipeline('question-answering')
+#         ans = type_nlp(question=question_input, context=text_input)
+#         ans_final = ans['answer']
+#         score = str(round((ans['score'] * 100), 2)) + ' %'
+#
+#         return ans_final,score
+#
+#     else: return '',''
 
-            raise dash.exceptions.PreventUpdate
-        else:
-            type_nlp = pipeline('question-answering',model='distilbert-base-cased-distilled-squad')
-            ans = type_nlp(question=question_input, context=text_input)
-            ans_final = ans['answer']
-            score = str(round((ans['score'] * 100), 2)) + ' %'
-
-            return ans_final,score
-
-    
-
-@app.callback(
+@app_dash.callback(
 
     Output('noun_id', 'children'),
-    Output('number_noun', 'children'),
+    #Output('number_noun', 'children'),
     Output('overall_sentiment', 'children'),
     Output('overall_polarity', 'children'),
     Output('overall_subjectivity', 'children'),
@@ -246,43 +241,40 @@ def update_answer(clicked,text_input,question_input):
 
 def update_others(clicked,text_input):
 
-    if clicked > 0 :
+    if clicked > 0 and text_input != '' :
 
-        if text_input is None:
-            raise dash.exceptions.PreventUpdate
-        else:
+        blob = TextBlob(text_input)
+        noun_set = (set(blob.noun_phrases))
+        noun_list = list(noun_set)
+        noun_text = noun_list[0]
 
-            blob = TextBlob(text_input)
-            noun_set = (set(blob.noun_phrases))
-            noun_list = list(noun_set)
-            noun_text = noun_list[0]
-
-            for i in range(1,len(noun_list)):
-                noun_text = noun_text+' , '+noun_list[i]
+        for i in range(1,len(noun_list)):
+            noun_text = noun_text+' , '+noun_list[i]
 
 
-            def getPolarity(text):
-                return TextBlob(text).sentiment.polarity
+        def getPolarity(text):
+            return TextBlob(text).sentiment.polarity
 
-            def getSubjectivity(text):
-                return TextBlob(text).sentiment.subjectivity
+        def getSubjectivity(text):
+            return TextBlob(text).sentiment.subjectivity
 
-            def getSentiment(text):
-                    p = TextBlob(text).sentiment.polarity
-                    if p>0 : return 'POSITIVE'
-                    elif p<0 : return 'NEGATIVE'
-                    else : return 'NEUTRAL'
+        def getSentiment(text):
+                p = TextBlob(text).sentiment.polarity
+                if p>0 : return 'POSITIVE'
+                elif p<0 : return 'NEGATIVE'
+                else : return 'NEUTRAL'
 
-            pol = np.round(getPolarity(text_input),2)
-            sub = np.round(getSubjectivity(text_input),2)
-            senten = getSentiment(text_input)
+        pol = np.round(getPolarity(text_input),2)
+        sub = np.round(getSubjectivity(text_input),2)
+        senten = getSentiment(text_input)
 
+# str(len(noun_set))+' Unique Noun Phrases' [Removed]
+        return noun_text,senten,pol,sub
 
-            return noun_text,str(len(noun_set))+' Unique Noun Phrases',senten,pol,sub
+    else:
+            return '','','','','','',''
 
-   
-
-@app.callback(
+@app_dash.callback(
     Output('datable_interactive','data'),
     Output('datable_interactive','columns'),
     Output('datable_interactive','style_cell_conditional'),
@@ -306,12 +298,7 @@ def update_others(clicked,text_input):
 
 def update_sentiment_table(clicked,text_input):
 
-    if clicked>0 :
-
-      if text_input is None:
-        raise dash.exceptions.PreventUpdate
-
-      else:
+    if clicked>0 and text_input !='':
 
         blob = TextBlob(text_input)
         sent = (blob.sentences)
@@ -358,7 +345,7 @@ def update_sentiment_table(clicked,text_input):
 
 
 
-@app.callback(
+@app_dash.callback(
 
     Output('scatter_graph1','figure'),
     Output('bar_graph2','figure'),
@@ -471,5 +458,4 @@ def update_graphs(all_rows_data,selected_rows_indices):
 
 
 if __name__ == '__main__':
-    app.run_server(debug = True)
-
+    app_dash.run_server(debug = True)
