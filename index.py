@@ -11,6 +11,10 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 
+
+app = Dash(__name__,meta_tags=[{'name':'viewport', 'content':'width=device-width'}],prevent_initial_callbacks=True)
+server = app.server
+
 # Get Quote
 
 api_response = requests.get('https://favqs.com/api/qotd')
@@ -98,8 +102,7 @@ button = dbc.Container(
 )
 
 
-app = Dash(__name__,meta_tags=[{'name':'viewport', 'content':'width=device-width'}],prevent_initial_callbacks=True)
-server = app.server
+
 
 navbar = dbc.NavbarSimple(children = [
     html.Img(src = 'https://cdn-icons-png.flaticon.com/512/945/945458.png?w=740&t=st=1678701855~exp=1678702455~hmac=6f067e5f6a47a0cd6810a7ffb2598c9a41046bb8bbdfc1aaa538ec3eeed80748',height = '50px',)
