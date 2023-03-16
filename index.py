@@ -449,5 +449,5 @@ def update_graphs(all_rows_data,selected_rows_indices):
 
 
 if __name__ == '__main__':
-    app.run_server(debug = True)
+    app.run_server(debug = False)
 
