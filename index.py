@@ -1,3 +1,4 @@
+import dash.exceptions
 import dash_bootstrap_components as dbc
 from transformers import pipeline
 from dash import Dash,Input,Output,dcc,html,State,dash_table
@@ -89,7 +90,7 @@ textArea = dcc.Textarea(id = 'dcc_textarea',
 
 
 textArea_question = dcc.Textarea(id = 'question',
-                                 placeholder='Question',
+                                 placeholder='',
                                  draggable=True,
                                  spellCheck=True,
                                  style = {'fontFamily':'Times New Roman','border-style':'solid','width':'100%','min-height':'20%','height':'auto'},
@@ -211,13 +212,17 @@ server = app.server
     State('question', 'value'),
 )
 def update_answer(clicked,text_input,question_input):
-    if clicked > 0 and text_input != '':
-        type_nlp = pipeline('question-answering')
-        ans = type_nlp(question=question_input, context=text_input)
-        ans_final = ans['answer']
-        score = str(round((ans['score'] * 100), 2)) + ' %'
+    if clicked > 0 :
+        if  (text_input is None) or (question_input is None):
 
-        return ans_final,score
+            raise dash.exceptions.PreventUpdate
+        else:
+            type_nlp = pipeline('question-answering')
+            ans = type_nlp(question=question_input, context=text_input)
+            ans_final = ans['answer']
+            score = str(round((ans['score'] * 100), 2)) + ' %'
+
+            return ans_final,score
 
     else: return '',''
 
@@ -235,35 +240,39 @@ def update_answer(clicked,text_input,question_input):
 
 def update_others(clicked,text_input):
 
-    if clicked > 0 and text_input != '' :
+    if clicked > 0 :
 
-        blob = TextBlob(text_input)
-        noun_set = (set(blob.noun_phrases))
-        noun_list = list(noun_set)
-        noun_text = noun_list[0]
+        if text_input is None:
+            raise dash.exceptions.PreventUpdate
+        else:
 
-        for i in range(1,len(noun_list)):
-            noun_text = noun_text+' , '+noun_list[i]
+            blob = TextBlob(text_input)
+            noun_set = (set(blob.noun_phrases))
+            noun_list = list(noun_set)
+            noun_text = noun_list[0]
 
-
-        def getPolarity(text):
-            return TextBlob(text).sentiment.polarity
-
-        def getSubjectivity(text):
-            return TextBlob(text).sentiment.subjectivity
-
-        def getSentiment(text):
-                p = TextBlob(text).sentiment.polarity
-                if p>0 : return 'POSITIVE'
-                elif p<0 : return 'NEGATIVE'
-                else : return 'NEUTRAL'
-
-        pol = np.round(getPolarity(text_input),2)
-        sub = np.round(getSubjectivity(text_input),2)
-        senten = getSentiment(text_input)
+            for i in range(1,len(noun_list)):
+                noun_text = noun_text+' , '+noun_list[i]
 
 
-        return noun_text,str(len(noun_set))+' Unique Noun Phrases',senten,pol,sub
+            def getPolarity(text):
+                return TextBlob(text).sentiment.polarity
+
+            def getSubjectivity(text):
+                return TextBlob(text).sentiment.subjectivity
+
+            def getSentiment(text):
+                    p = TextBlob(text).sentiment.polarity
+                    if p>0 : return 'POSITIVE'
+                    elif p<0 : return 'NEGATIVE'
+                    else : return 'NEUTRAL'
+
+            pol = np.round(getPolarity(text_input),2)
+            sub = np.round(getSubjectivity(text_input),2)
+            senten = getSentiment(text_input)
+
+
+            return noun_text,str(len(noun_set))+' Unique Noun Phrases',senten,pol,sub
 
     else:
             return '','','','','',
@@ -292,7 +301,12 @@ def update_others(clicked,text_input):
 
 def update_sentiment_table(clicked,text_input):
 
-    if clicked>0 and text_input !='':
+    if clicked>0 :
+
+      if text_input is None:
+        raise dash.exceptions.PreventUpdate
+
+      else:
 
         blob = TextBlob(text_input)
         sent = (blob.sentences)
