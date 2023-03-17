@@ -44,7 +44,7 @@ none_graph = px.scatter(x = [0],y=[0],
 
 # tabs
 
-tab_style = {'color':'#000000',                                               #style when tab is not selected
+tab_style = {'color':'#000000',                                              
              'backgroundColor': '#909090',
                 'fontWeight':'lighter',
               'fontSize':'1.0vw',
@@ -93,6 +93,7 @@ textArea = dcc.Textarea(id = 'dcc_textarea',
                         spellCheck=True,
                         style = {'fontFamily':'Times New Roman','border-style':'solid','width':'100%','min-height':'88%','height':'auto','backgroundColor':'#FFFFFF','color':'black'})
 
+# QUESTION - ANSWERING FEATURE REMMOVED
 
 #textArea_question = dcc.Textarea(id = 'question',
 #                                  placeholder='Question',
@@ -124,6 +125,8 @@ para_quote = dbc.Row([
         dbc.Container(
         children=['A quote to Remember',html.Br(),card_quote], className='quote_container',fluid=True)),
 ], className='para_and_quote')
+
+# QUESTION - ANSWERING REMOVED
 
 #question_go = dbc.Row([
 #    dbc.Col(children = ['Ask your question below',html.Br(),html.Br()],className='ask_and_question',width={'size':10,'offset':0}),
@@ -242,7 +245,13 @@ app_dash.layout = html.Div([navbar,para_quote,nouns,overall,textblob_analysis,ht
 
 def update_others(clicked,text_input):
 
-    if clicked > 0 and text_input != '' :
+    if clicked > 0 :
+      
+      if text_input is None:
+        
+        raise dash.exceptions.PreventUpdate         # Prevent Updat if no input is given and GO is clicked
+        
+      else:
 
         blob = TextBlob(text_input)
         noun_set = (set(blob.noun_phrases))
@@ -273,7 +282,7 @@ def update_others(clicked,text_input):
         return noun_text,senten,pol,sub
 
     else:
-            return '','','','','','',''
+            return '','','',''
 
 @app_dash.callback(
     Output('datable_interactive','data'),
@@ -299,7 +308,13 @@ def update_others(clicked,text_input):
 
 def update_sentiment_table(clicked,text_input):
 
-    if clicked>0 and text_input !='':
+    if clicked>0:
+      
+      if text_input is None:
+        
+        raise dash.exceptions.PreventUpdate              # Prevent Updat if no input is given and GO is clicked
+        
+      else:
 
         blob = TextBlob(text_input)
         sent = (blob.sentences)
@@ -358,11 +373,13 @@ def update_sentiment_table(clicked,text_input):
 )
 
 def update_graphs(all_rows_data,selected_rows_indices):
-    df_all = pd.DataFrame(all_rows_data)
+    df_all = pd.DataFrame(all_rows_data)                                   # df_all -> Data Frame containing all rows after filtering
+
+# change the color of scatter graph on selecting a row in table
 
     colors = ['#7FDBFF' if i in selected_rows_indices else '#000000' for i in range(len(df_all))]
 
-
+#scatter graph
 
     if 'id' in df_all:
         scatter_graph = {
